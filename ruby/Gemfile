@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'pry', :group => :development
+gem 'pry-doc'
+gem 'bundler'
+gem 'ruby_parser'
+gem 'rubocop'
