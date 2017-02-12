@@ -1,4 +1,4 @@
-# a tree
+# Build a tree from a hash
 class Tree
   attr_accessor :children, :node_name
 
