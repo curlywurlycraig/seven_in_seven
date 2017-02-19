@@ -12,14 +12,32 @@ module ActsAsCsv
   end
 
   module InstanceMethods
+    class CsvRow
+      # There's probably a better way to access things from the parent module
+      # than passing args to the initialize method
+      def initialize(row_array, headers)
+        @row_array = row_array
+        @headers = headers
+      end
+
+      def method_missing(name)
+        name_str = name.to_s
+        @row_array[@headers.index(name_str)]
+      end
+    end
+
     def read
       @csv_contents = []
       filename = self.class.to_s.downcase + '.txt'
       file = File.new(filename)
       @headers = file.gets.chomp.split(', ')
       file.each do |row|
-        @csv_contents << row.chomp.split(', ')
+        @csv_contents << (CsvRow.new row.chomp.split(', '), @headers)
       end
+    end
+
+    def each(&block)
+      @csv_contents.each(&block)
     end
 
     attr_accessor :headers, :csv_contents
@@ -35,5 +53,4 @@ class RubyCsv
 end
 
 m = RubyCsv.new
-puts m.headers.inspect
-puts m.csv_contents.inspect
+m.each { |row| puts row.some }
